@@ -1,10 +1,15 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
+# Use absolute path for database
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATABASE_PATH = os.path.join(BASE_DIR, "careerhelper.db")
+
 engine = create_engine(
-    settings.DATABASE_URL.replace("sqlite:///", "sqlite:////"),
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
+    f"sqlite:///{DATABASE_PATH}",
+    connect_args={"check_same_thread": False}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

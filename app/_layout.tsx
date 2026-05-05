@@ -29,9 +29,8 @@ function RootLayoutNav() {
     <Stack screenOptions={{ headerShown: false }}>
       {/* Landing page (index) */}
       <Stack.Screen name="index" />
-      {/* Auth screens */}
-      <Stack.Screen name="auth/login" />
-      <Stack.Screen name="auth/signup" />
+      {/* Auth routes - handled by nested auth/_layout.tsx */}
+      <Stack.Screen name="auth" />
       {/* Main tab screens */}
       <Stack.Screen name="(tabs)" />
       {/* Feature screens - slide up as modals */}

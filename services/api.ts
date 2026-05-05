@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // ============================================
 // ENVIRONMENT CONFIGURATION
 // ============================================
-const USE_NGROK = true;
+const USE_NGROK = false; // Set to true to use ngrok, false to use local IP (same WiFi)
 const NGROK_URL = 'https://debrah-ugsome-nonprofanely.ngrok-free.dev'; // Replace with your actual ngrok URL
 const YOUR_COMPUTER_IP = '192.168.1.7';
 const LOCAL_PORT = '8000';

@@ -56,3 +56,63 @@ class CourseResult(BaseModel):
 
 class CourseSearchResponse(BaseModel):
     results: list[CourseResult]
+
+# Stats schemas
+class UserStatsResponse(BaseModel):
+    id: int
+    user_id: int
+    messages_count: int
+    roadmaps_count: int
+    courses_viewed: int
+    quizzes_taken: int
+    interviews_completed: int
+    last_updated: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Resume schemas
+class ResumeUploadRequest(BaseModel):
+    file_name: str
+    file_content: str  # Base64 encoded
+
+class ResumeResponse(BaseModel):
+    id: int
+    file_name: str
+    parsed_data: Optional[str] = None
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+class ResumeRefineRequest(BaseModel):
+    resume_text: str
+    target_role: Optional[str] = None
+
+class ResumeRefineResponse(BaseModel):
+    refined_resume: str
+    improvements: list[str]
+    ats_score: int
+
+# Interview History schemas
+class InterviewHistoryResponse(BaseModel):
+    id: int
+    role: str
+    questions: Optional[str] = None
+    answers: Optional[str] = None
+    feedback: Optional[str] = None
+    score: Optional[int] = None
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Analytics Trends schemas
+class AnalyticsTrendsResponse(BaseModel):
+    id: int
+    category: str
+    activity_count: int
+    date: datetime
+    
+    class Config:
+        from_attributes = True
