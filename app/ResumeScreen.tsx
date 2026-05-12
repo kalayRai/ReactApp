@@ -9,17 +9,42 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
-  Share,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
-import api from '../services/api';
+import { analyzeResumeWithAI } from '../services/api';
 
 const BRAND_NAVY = '#081833';
 const BRAND_GOLD = '#d4a45f';
 const CARD_BG = 'rgba(255,255,255,0.06)';
+
+// Allowed MIME types for resume files
+const ALLOWED_TYPES = [
+  'application/pdf',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/msword',
+];
+
+// Keywords that STRONGLY suggest a document is a resume
+const RESUME_INDICATORS = [
+  'experience', 'education', 'skills', 'employment', 'work history',
+  'certification', 'certifications', 'achievements', 'summary', 'objective',
+  'projects', 'portfolio', 'references', 'qualifications', 'competencies',
+  'professional experience', 'work experience', 'education background',
+  'technical skills', 'soft skills', 'languages', 'interests', 'extracurricular',
+  'objective', 'career objective', 'profile summary', 'personal summary',
+  'contact information', 'email', 'phone', 'address', 'linkedin',
+];
+
+// Keywords that suggest a document is NOT a resume
+const NON_RESUME_INDICATORS = [
+  'invoice', 'receipt', 'purchase order', 'contract', 'agreement',
+  'chapter', 'table of contents', 'copyright', 'isbn', 'publisher',
+  'figure', 'caption', 'illustration', 'abstract', 'methodology',
+  'references cited', 'bibliography', 'acknowledgments', 'dedication',
+  'table of figures', 'list of tables', 'noreferrer', 'noopener',
+];
 
 type AnalysisData = {
   overview: string;
@@ -29,17 +54,9 @@ type AnalysisData = {
   roadmap: string[];
 };
 
-type RefinedData = {
-  refined_resume: string;
-  improvements: string[];
-  ats_score: number;
-};
-
 export default function ResumeScreen() {
   const [isUploading, setIsUploading] = useState(false);
-  const [isRefining, setIsRefining] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisData | null>(null);
-  const [refinedData, setRefinedData] = useState<RefinedData | null>(null);
   const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerResult | null>(null);
 
   // Helper to parse **bold** markers and apply consistent gold color
@@ -79,142 +96,181 @@ export default function ResumeScreen() {
     }
   };
 
+  const isLikelyResume = (text: string): { isResume: boolean; reason?: string; score: number } => {
+    const lower = text.toLowerCase();
+    const resumeScore = RESUME_INDICATORS.filter(k => lower.includes(k)).length;
+    const nonResumeScore = NON_RESUME_INDICATORS.filter(k => lower.includes(k)).length;
+
+    // Strong rejection signals
+    if (nonResumeScore >= 2 && resumeScore < 3) {
+      return { isResume: false, reason: 'This document does not appear to be a resume (e.g., it may be a contract, book chapter, invoice, or academic paper). Please upload your actual resume (PDF or DOCX).', score: 0 };
+    }
+
+    // Need at least 3 resume indicators to be considered valid
+    if (resumeScore < 3) {
+      return { isResume: false, reason: 'This document does not contain typical resume sections (experience, education, skills, etc.). Please upload your resume file.', score: resumeScore };
+    }
+
+    return { isResume: true, score: resumeScore };
+  };
+
   const uploadAndAnalyze = async () => {
-    if (!selectedFile || selectedFile.canceled) return;
+    if (!selectedFile || selectedFile.canceled) {
+      console.log('No file selected');
+      return;
+    }
+
+    const asset = selectedFile.assets[0];
+    if (!asset) {
+      console.log('No asset in selectedFile');
+      Alert.alert('Error', 'File information not found. Please try selecting the file again.');
+      return;
+    }
+
+    console.log('Starting analysis for:', asset.name, 'URI:', asset.uri);
+    const fileName = asset.name.toLowerCase();
+
+    // === STEP 1: Validate file type ===
+    const isPdf = fileName.endsWith('.pdf');
+    const isDocx = fileName.endsWith('.docx') || fileName.endsWith('.doc');
+
+    if (!isPdf && !isDocx) {
+      Alert.alert(
+        'Invalid File Type',
+        'Please upload a PDF or DOCX resume file. Other document types are not supported for analysis.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    // File size check (max 5MB)
+    if (asset.size && asset.size > 5 * 1024 * 1024) {
+      Alert.alert('File Too Large', 'Please upload a resume file under 5MB.');
+      return;
+    }
 
     setIsUploading(true);
+    setAnalysisResult(null);
+    console.log('State set, isUploading should now be true');
+
     try {
-      const asset = selectedFile.assets[0];
-      
-      // Send as JSON with filename
-      const response = await api.post('/api/resume/upload', {
-        file_name: asset.name,
-        content: "" // Empty for now - in production, you'd read file as base64
-      });
+      // === STEP 2: Validate file looks like a resume (before spending API call) ===
+      const resumeFilenameIndicators = ['resume', 'cv', 'curriculum', 'vitae', 'bio', 'profile'];
+      const nonResumeFilenameIndicators = ['invoice', 'contract', 'agreement', 'report', 'article', 'chapter', 'book', 'note', 'ticket', 'receipt'];
+      const hasResumeFilename = resumeFilenameIndicators.some(k => fileName.includes(k));
+      const hasNonResumeFilename = nonResumeFilenameIndicators.some(k => fileName.includes(k));
 
-      const rawData = response.data;
+      // Extract text from file if possible
+      let extractedText = '';
+      if (asset.uri && (asset.uri.startsWith('http://') || asset.uri.startsWith('https://') || asset.uri.startsWith('file://') || asset.uri.startsWith('content://'))) {
+        try {
+          console.log('Fetching file from URI:', asset.uri);
+          const response = await fetch(asset.uri);
+          console.log('Fetch response status:', response.status);
+          if (response.ok) {
+            const textContent = await response.text();
+            const cleanText = textContent.replace(/[^\x20-\x7E\n\r\t]/g, ' ').trim();
+            if (cleanText.length > 50) {
+              extractedText = cleanText.substring(0, 8000);
+              console.log('Extracted text length:', extractedText.length);
+            }
+          }
+        } catch (readErr) {
+          console.log('File fetch error (normal for local files):', readErr);
+        }
+      }
 
-      // Check if we got actual analysis data
-      const hasAnalysis = rawData?.overview || rawData?.summary || rawData?.score;
-      
-      // Use fallback data if no real analysis returned
-      const normalizedData: AnalysisData = hasAnalysis ? {
-        overview: rawData?.overview || rawData?.summary || "Analysis complete.",
-        score: rawData?.score ?? 75,
-        skillGaps: rawData?.skillGaps || rawData?.skill_gaps || [],
-        feedback: rawData?.feedback || [],
-        roadmap: rawData?.roadmap || []
-      } : {
-        overview: "Your resume has been uploaded successfully! Our AI analysis found strong fundamentals in your experience. To reach senior levels, focus on quantifying your impact with specific metrics and align with modern industry standards.",
-        score: 82,
-        skillGaps: ["Cloud Architecture (AWS/Azure)", "Unit Testing", "CI/CD Pipelines"],
-        feedback: [
-          "Use metrics to quantify achievements (e.g., 'Increased efficiency by 20%')",
-          "Standardize section headers for ATS compatibility (e.g., 'Work Experience' not 'What I've Done')",
-          "Use stronger action verbs like 'Spearheaded', 'Orchestrated', 'Championed'"
-        ],
-        roadmap: ["Complete AWS Certified Solutions Architect", "Master Jest/React Testing Library"]
-      };
+      // Strong rejection: filename says non-resume AND no extracted text
+      if (hasNonResumeFilename && extractedText.trim().length < 100) {
+        console.log('Rejected: non-resume filename + no text');
+        Alert.alert(
+          'Not a Resume',
+          `"${asset.name}" does not appear to be a resume. Please upload a file named "Resume.pdf" or "My_CV.docx" that contains your professional experience, education, and skills.`,
+          [{ text: 'OK' }]
+        );
+        setIsUploading(false);
+        return;
+      }
 
-      setAnalysisResult(normalizedData);
-    } catch (error) {
-      console.error('Analysis error:', error);
-      // Fallback: This combines the "Old" style text with the "New" detailed metrics
+      // Client-side resume validation (only if we have text)
+      if (extractedText && extractedText.trim().length > 100) {
+        const quickCheck = isLikelyResume(extractedText);
+        if (!quickCheck.isResume) {
+          console.log('Rejected by keyword check:', quickCheck.reason);
+          Alert.alert('Not a Resume', quickCheck.reason, [{ text: 'OK' }]);
+          setIsUploading(false);
+          return;
+        }
+        console.log('Passed keyword validation, score:', quickCheck.score);
+      } else if (!hasResumeFilename && extractedText.trim().length < 100) {
+        // No text and filename doesn't suggest resume
+        console.log('Rejected: no text and no resume filename');
+        Alert.alert(
+          'Not a Resume',
+          `"${asset.name}" does not appear to be a resume. Please upload a file with "Resume" or "CV" in the filename that contains your professional experience, education, and skills.`,
+          [{ text: 'OK' }]
+        );
+        setIsUploading(false);
+        return;
+      }
+
+      // === STEP 3: Build prompt for AI ===
+      let resumePrompt: string;
+      if (extractedText && extractedText.trim().length > 100) {
+        resumePrompt = `Resume content:\n${extractedText}`;
+        console.log('Using extracted text for analysis');
+      } else {
+        resumePrompt = `Resume file: "${asset.name}". Please analyze this document. If it IS a resume, provide your analysis. If it is NOT a resume (e.g., contract, invoice, book chapter), clearly identify it as non-resume.`;
+        console.log('No extractable text, using filename prompt');
+      }
+
+      // === STEP 4: Call AI for final verification + analysis ===
+      console.log('Calling AI for resume analysis...');
+      let result;
+      try {
+        result = await analyzeResumeWithAI(resumePrompt, '');
+        console.log('AI result received:', JSON.stringify(result, null, 2));
+      } catch (aiErr: any) {
+        console.error('AI call failed:', aiErr);
+        Alert.alert(
+          'AI Analysis Failed',
+          `Could not connect to AI service.\n\nDetails: ${aiErr?.message || aiErr}\n\nMake sure Groq API key is configured in config.ts or check your internet connection.`,
+          [{ text: 'OK' }]
+        );
+        setIsUploading(false);
+        return;
+      }
+
+      if (!result) {
+        console.log('AI returned null/undefined');
+        Alert.alert('Error', 'AI returned no response. Please try again.');
+        setIsUploading(false);
+        return;
+      }
+
+      if (!result.isResume) {
+        Alert.alert('Not a Resume', result.warning || 'Could not detect a valid resume. Please upload your resume file.', [{ text: 'OK' }]);
+        setIsUploading(false);
+        return;
+      }
+
       setAnalysisResult({
-        overview: "Analysis complete! You have strong foundations in Python and Data Structures. To reach senior levels, focus on quantifying your impact and adhering to modern industry standards.",
-        score: 82,
-        skillGaps: ["Cloud Architecture (AWS/Azure)", "Unit Testing", "CI/CD Pipelines"],
-        feedback: ["Improve writing standards: Use metrics (e.g., 'Increased efficiency by 15%') rather than just listing tasks.", "Standardize layout: Use a single-column format to improve ATS readability.", "Use stronger action verbs like 'Spearheaded' or 'Orchestrated'."],
-        roadmap: ["Complete AWS Certified Solutions Architect", "Master Jest/React Testing Library"]
+        overview: result.overview || 'Analysis complete.',
+        score: result.score || 65,
+        skillGaps: result.skillGaps?.length ? result.skillGaps : ['Add more specific technical skills', 'Quantify achievements'],
+        feedback: result.feedback?.length ? result.feedback : ['Review formatting', 'Add metrics to achievements'],
+        roadmap: result.roadmap?.length ? result.roadmap : ['Identify target role', 'Fill skill gaps', 'Build portfolio'],
       });
+    } catch (error: any) {
+      console.error('Analysis error - Full error object:', JSON.stringify(error, null, 2));
+      const errorMessage = error?.message || String(error);
+      Alert.alert(
+        'Analysis Error',
+        `Error: ${errorMessage}`,
+        [{ text: 'OK' }]
+      );
     } finally {
       setIsUploading(false);
-    }
-  };
-
-  const refineResume = async () => {
-    if (!selectedFile) return;
-    if (!selectedFile.assets || selectedFile.assets.length === 0) return;
-
-    setIsRefining(true);
-    try {
-      const asset = selectedFile.assets[0];
-      
-      // For refinement, we send the file name and simulate resume text
-      // In production, you'd parse the actual file content
-      const response = await api.post('/api/resume/refine', {
-        resume_text: `Professional resume for ${asset.name}`,
-        target_role: "Software Engineer"
-      });
-
-      setRefinedData(response.data);
-    } catch (error) {
-      console.error('Refine error:', error);
-      // Fallback refined content
-      setRefinedData({
-        refined_resume: `CAREERHELPER - AI REFINED RESUME
-
-=====================================
-
-PROFESSIONAL SUMMARY
---------------------
-Dynamic Software Engineer with proven track record of delivering results. Experienced in driving business growth through strategic planning and stakeholder collaboration. Known for excellent problem-solving abilities and commitment to excellence.
-
-KEY IMPROVEMENTS MADE:
-• Enhanced action verbs for stronger impact
-• Added quantifiable achievements where applicable
-• Improved formatting for ATS compatibility
-• Streamlined bullet points for better readability
-• Added industry-standard section headers
-
-EXPERIENCE
-----------
-• Spearheaded key initiatives resulting in significant performance improvements
-• Demonstrated strong leadership and team collaboration skills
-• Consistently exceeded targets and delivered projects on time
-
-SKILLS
-------
-• Leadership
-• Project Management
-• Communication
-• Problem Solving
-
----
-Generated by CareerHelper AI`,
-        improvements: [
-          "Improved action verbs (e.g., 'Spearheaded' instead of 'Did')",
-          "Added quantified achievements",
-          "Enhanced ATS compatibility with standard headers",
-          "Better formatting and readability",
-          "Optimized skills section for target role"
-        ],
-        ats_score: 85
-      });
-    } finally {
-      setIsRefining(false);
-    }
-  };
-
-  const downloadRefinedResume = async () => {
-    if (!refinedData) return;
-
-    try {
-      const fileName = `refined_resume_${Date.now()}.txt`;
-      const filePath = FileSystem.documentDirectory + fileName;
-      
-      await FileSystem.writeAsStringAsync(filePath, refinedData.refined_resume, {
-        encoding: 'utf8'
-      });
-
-      // Share the file
-      await Share.shareAsync(filePath, {
-        mimeType: 'text/plain',
-        dialogTitle: 'Download Refined Resume',
-      });
-    } catch (error) {
-      console.error('Download error:', error);
-      Alert.alert('Error', 'Failed to download resume');
     }
   };
 
@@ -225,7 +281,7 @@ Generated by CareerHelper AI`,
           <Ionicons name="arrow-back" size={24} color={BRAND_GOLD} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Resume AI Analysis</Text>
-        <View style={{ width: 40 }} />
+        <View style={{ width: 60 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
@@ -250,11 +306,18 @@ Generated by CareerHelper AI`,
 
             {selectedFile && !selectedFile.canceled && (
               <TouchableOpacity 
-                style={styles.analyzeButton} 
+                style={[styles.analyzeButton, isUploading && styles.analyzeButtonDisabled]} 
                 onPress={uploadAndAnalyze}
                 disabled={isUploading}
               >
-                {isUploading ? <ActivityIndicator color={BRAND_NAVY} /> : <Text style={styles.analyzeButtonText}>Start AI Analysis</Text>}
+                {isUploading ? (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <ActivityIndicator color={BRAND_NAVY} size="small" />
+                    <Text style={styles.analyzeButtonText}>Analyzing...</Text>
+                  </View>
+                ) : (
+                  <Text style={styles.analyzeButtonText}>Start AI Analysis</Text>
+                )}
               </TouchableOpacity>
             )}
           </View>
@@ -403,6 +466,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  analyzeButtonDisabled: {
+    backgroundColor: '#a08040',
+  },
   analyzeButtonText: { color: BRAND_NAVY, fontWeight: 'bold', fontSize: 16 },
   resultCard: {
     backgroundColor: CARD_BG,
@@ -438,30 +504,6 @@ const styles = StyleSheet.create({
   },
   resetButton: { marginTop: 20, alignSelf: 'center' },
   resetButtonText: { color: BRAND_GOLD, fontSize: 14, textDecorationLine: 'underline' },
-  refineButton: {
-    backgroundColor: '#22c55e',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    gap: 8,
-  },
-  refineButtonText: { color: BRAND_NAVY, fontWeight: 'bold', fontSize: 15 },
-  refinedContainer: { marginTop: 10 },
-  downloadButton: {
-    backgroundColor: BRAND_GOLD,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginTop: 16,
-    gap: 8,
-  },
-  downloadButtonText: { color: BRAND_NAVY, fontWeight: 'bold', fontSize: 15 },
   infoCard: {
     flexDirection: 'row',
     backgroundColor: 'rgba(255,255,255,0.03)',

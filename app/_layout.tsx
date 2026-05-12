@@ -29,16 +29,17 @@ function RootLayoutNav() {
     <Stack screenOptions={{ headerShown: false }}>
       {/* Landing page (index) */}
       <Stack.Screen name="index" />
-      {/* Auth routes - handled by nested auth/_layout.tsx */}
-      <Stack.Screen name="auth" />
-      {/* Main tab screens */}
+      {/* Auth screens - handled by app/auth/_layout.tsx */}
       <Stack.Screen name="(tabs)" />
       {/* Feature screens - slide up as modals */}
       <Stack.Screen name="ChatbotScreen" options={{ presentation: 'card' }} />
       <Stack.Screen name="ResumeScreen" options={{ presentation: 'card' }} />
       <Stack.Screen name="QuizScreen" options={{ presentation: 'card' }} />
+      <Stack.Screen name="CoursesScreen" options={{ presentation: 'card' }} />
       <Stack.Screen name="InterviewScreen" options={{ presentation: 'card' }} />
       <Stack.Screen name="AnalyticsScreen" options={{ presentation: 'card' }} />
+      <Stack.Screen name="onboarding-wrapper" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="SimulatorScreen" options={{ presentation: 'card' }} />
     </Stack>
   );
 }

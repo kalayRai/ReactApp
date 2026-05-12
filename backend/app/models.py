@@ -112,3 +112,36 @@ class AnalyticsTrends(Base):
     date = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User")
+
+# Onboarding Results - stores user's career profile and AI-generated results
+class OnboardingResult(Base):
+    __tablename__ = "onboarding_results"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
+    
+    # User profile from onboarding form
+    profile_name = Column(String, nullable=True)
+    profile_age = Column(String, nullable=True)
+    profile_location = Column(String, nullable=True)
+    profile_education = Column(String, nullable=True)
+    profile_current_role = Column(String, nullable=True)
+    profile_years_exp = Column(String, nullable=True)
+    profile_skills = Column(Text, nullable=True)  # JSON array
+    profile_values = Column(Text, nullable=True)  # JSON array
+    profile_goals = Column(Text, nullable=True)
+    profile_salary_floor = Column(String, nullable=True)
+    profile_work_type = Column(String, nullable=True)
+    
+    # AI-generated results
+    enriched_profile = Column(Text, nullable=True)  # JSON
+    career_matches = Column(Text, nullable=True)  # JSON array
+    roadmap = Column(Text, nullable=True)  # JSON
+    jobs = Column(Text, nullable=True)  # JSON array
+    
+    # Status
+    pipeline_complete = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    user = relationship("User")

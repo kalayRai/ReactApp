@@ -342,11 +342,12 @@ const InterviewScreen = () => {
       >
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#d4a45f" />
+            <Ionicons name="arrow-back" size={24} color="#d4a45f" />
           </TouchableOpacity>
           <View style={styles.headerTextWrap}>
             <Text style={styles.headerTitle}>AI Interview Practice</Text>
             <Text style={styles.headerSubtitle}>Train with structured questions, instant feedback, and saved history.</Text>
+            <View style={{ width: 40 }} />
           </View>
         </View>
 
@@ -579,6 +580,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
   },
   backButton: {
     width: 40,
@@ -594,7 +597,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 18,
     fontWeight: '700',
     color: '#ffffff',
     marginBottom: 4,
@@ -612,7 +615,7 @@ const styles = StyleSheet.create({
     borderColor: '#1b335a',
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 15,
     fontWeight: '700',
     color: '#ffffff',
   },

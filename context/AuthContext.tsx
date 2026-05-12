@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../services/api';
+import { useCareerStore } from '../src/store/careerStore';
 
 interface AuthContextType {
   user: any;
@@ -66,16 +67,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
+const login = async (email: string, password: string) => {
     try {
-      // Try the login endpoint that worked for you
+      // Try the login endpoint directly - no preflight health check needed
       const loginEndpoints = [
         '/api/login',              // ✅ This one worked in your logs
         '/api/auth/login',
         '/auth/login',
         '/login'
       ];
-      
+
       let response;
       for (const endpoint of loginEndpoints) {
         try {
@@ -87,15 +88,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log(`Failed on ${endpoint}:`, e.response?.status);
         }
       }
-      
+
       if (!response) {
-        throw new Error('No login endpoint available');
+        throw new Error('Cannot connect to server. Please check your internet connection.');
       }
-      
+
       // Handle response format
       let access_token;
       let userData;
-      
+
       if (response.data.access_token) {
         access_token = response.data.access_token;
         userData = response.data.user || response.data;
@@ -103,31 +104,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         access_token = response.data.token;
         userData = response.data.user || response.data;
       } else {
-        // If response has user data but no token, create a temp token
         access_token = 'temp_' + Date.now();
         userData = response.data;
       }
-      
+
       await AsyncStorage.setItem('access_token', access_token);
       api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       setUser(userData);
-      
+
     } catch (error: any) {
-      console.error('Login error:', error.response?.data);
-      throw new Error(error.response?.data?.detail || 'Login failed');
+      console.error('Login error:', error.message || error.response?.data);
+      const message = error.response?.data?.detail ||
+                      error.message ||
+                      'Login failed. Please check your connection.';
+      throw new Error(message);
     }
   };
 
   const signup = async (name: string, email: string, password: string) => {
     try {
-      // Try signup endpoints
+      // Try signup endpoints directly - no preflight health check needed
       const signupEndpoints = [
         '/api/signup',
         '/api/auth/signup',
         '/auth/signup',
         '/signup'
       ];
-      
+
       let response;
       for (const endpoint of signupEndpoints) {
         try {
@@ -139,14 +142,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log(`Failed on ${endpoint}:`, e.response?.status);
         }
       }
-      
+
       if (!response) {
-        throw new Error('No signup endpoint available');
+        throw new Error('Cannot connect to server. Please check your internet connection.');
       }
-      
+
       let access_token;
       let userData;
-      
+
       if (response.data.access_token) {
         access_token = response.data.access_token;
         userData = response.data.user || response.data;
@@ -157,18 +160,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         access_token = 'temp_' + Date.now();
         userData = response.data;
       }
-      
+
       await AsyncStorage.setItem('access_token', access_token);
       api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       setUser(userData);
-      
+
     } catch (error: any) {
-      console.error('Signup error:', error.response?.data);
-      throw new Error(error.response?.data?.detail || 'Signup failed');
+      console.error('Signup error:', error.message || error.response?.data);
+      const message = error.response?.data?.detail ||
+                      error.message ||
+                      'Signup failed. Please check your connection.';
+      throw new Error(message);
     }
   };
 
   const logout = async () => {
+    // Clear onboarding results from Zustand store before clearing auth token
+    useCareerStore.getState().resetPipeline();
     await AsyncStorage.removeItem('access_token');
     delete api.defaults.headers.common['Authorization'];
     setUser(null);

@@ -9,11 +9,15 @@ import {
   Dimensions,
   StatusBar,
   SafeAreaView,
+  KeyboardAvoidingView,
+  ScrollView,
+  TextInput,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useCareerStore } from '../src/store/careerStore';
 const { width, height } = Dimensions.get('window');
 
 const BRAND_NAVY = '#081833';
@@ -30,11 +34,15 @@ const FEATURES = [
   { icon: 'chatbubble-ellipses-outline', label: 'AI Chatbot' },
   { icon: 'document-text-outline', label: 'Resume AI' },
   { icon: 'bulb-outline', label: 'Mock Quiz' },
+  { icon: 'book-outline', label: 'Courses' },
   { icon: 'mic-outline', label: 'Interviews' },
+  { icon: 'settings-outline', label: 'Onboarding' },
+  { icon: 'rocket-outline', label: 'Simulator' },
 ];
 
 export default function LandingScreen() {
   const { user } = useAuth();
+  const { pipelineComplete, careerMatches } = useCareerStore();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
 
@@ -116,6 +124,78 @@ export default function LandingScreen() {
             ))}
           </View>
         </Animated.View>
+
+        {/* NEW: Onboarding & Simulator Cards */}
+        <View style={styles.specialCardsContainer}>
+          {/* Onboarding Card */}
+          <TouchableOpacity
+            style={styles.specialCard}
+            onPress={() => router.push('/OnboardingScreen')}
+            activeOpacity={0.85}
+          >
+            <View style={styles.specialCardIcon}>
+              <Ionicons name="rocket-outline" size={32} color={BRAND_GOLD} />
+            </View>
+            <View style={styles.specialCardContent}>
+              <Text style={styles.specialCardTitle}>🎯 Get Your Career Plan</Text>
+              <Text style={styles.specialCardDesc}>
+                Complete AI-powered onboarding to receive personalized career matches, learning roadmap, and job recommendations
+              </Text>
+              <View style={styles.specialCardBadge}>
+                <Ionicons name="flash" size={14} color={BRAND_GOLD} />
+                <Text style={styles.specialCardBadgeText}>AI-Powered Analysis</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {/* Simulator Card */}
+          <TouchableOpacity
+            style={styles.specialCard}
+            onPress={() => router.push('/SimulatorScreen')}
+            activeOpacity={0.85}
+          >
+            <View style={styles.specialCardIcon}>
+              <Ionicons name="stats-chart-outline" size={32} color={BRAND_GOLD} />
+            </View>
+            <View style={styles.specialCardContent}>
+              <Text style={styles.specialCardTitle}>📊 Career Simulator</Text>
+              <Text style={styles.specialCardDesc}>
+                Simulate different career paths, explore "what-if" scenarios, and get detailed learning roadmaps
+              </Text>
+              <View style={styles.specialCardBadge}>
+                <Ionicons name="trending-up" size={14} color={BRAND_GOLD} />
+                <Text style={styles.specialCardBadgeText}>Interactive Simulation</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Original Features Section (Optional - can keep or remove) */}
+        <View style={styles.featuresSection}>
+          <Text style={styles.sectionTitle}>⚡ Quick Features</Text>
+          <View style={styles.quickFeaturesGrid}>
+            {FEATURES.map((feature, index) => (
+              <TouchableOpacity 
+                key={index}
+                style={styles.quickFeatureCard}
+                onPress={() => {
+                  // Navigate to corresponding feature
+                  const routeMap: Record<string, string> = {
+                    'AI Chatbot': '/ChatbotScreen',
+                    'Resume AI': '/ResumeScreen',
+                    'Mock Quiz': '/QuizScreen',
+                    'Courses': '/CoursesScreen',
+                    'Interviews': '/InterviewScreen',
+                  };
+                  router.push((routeMap[feature.label] as any) || '/ChatbotScreen');
+                }}
+              >
+                <Ionicons name={feature.icon as any} size={24} color={BRAND_GOLD} />
+                <Text style={styles.quickFeatureLabel}>{feature.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
 
         {/* Headline */}
         <View style={styles.headlineBlock}>
@@ -245,7 +325,86 @@ const styles = StyleSheet.create({
   },
   featureChipText: { color: BRAND_GOLD, fontSize: 11, fontWeight: '500' },
 
-  // ── Stats ──
+  // ── Special Cards (Onboarding & Simulator) ──
+  specialCardsContainer: {
+    marginTop: 20,
+    gap: 16,
+  },
+  specialCard: {
+    backgroundColor: CARD_BG,
+    borderRadius: 20,
+    padding: 18,
+    flexDirection: 'row',
+    gap: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(212,164,95,0.2)',
+  },
+  specialCardIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(212,164,95,0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  specialCardContent: {
+    flex: 1,
+    gap: 6,
+  },
+  specialCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  specialCardDesc: {
+    fontSize: 13,
+    color: '#aaa',
+    lineHeight: 18,
+  },
+  specialCardBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 4,
+  },
+  specialCardBadgeText: {
+    fontSize: 11,
+    color: BRAND_GOLD,
+    fontWeight: '500',
+  },
+
+  // ── Features Section ──
+  featuresSection: {
+    marginTop: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: 12,
+  },
+  quickFeaturesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  quickFeatureCard: {
+    backgroundColor: CARD_BG,
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+    width: (width - 52) / 2,
+    borderWidth: 0.5,
+    borderColor: 'rgba(212,164,95,0.2)',
+  },
+  quickFeatureLabel: {
+    fontSize: 11,
+    color: '#ccc',
+    marginTop: 6,
+    textAlign: 'center',
+  },
+
+  // ── Stats (if needed) ──
   statsRow: {
     flexDirection: 'row',
     gap: 10,
@@ -289,20 +448,6 @@ const styles = StyleSheet.create({
 
   // ── CTA ──
   ctaBlock: { marginTop: 30, gap: 12 },
-  ctaPrimary: {
-    backgroundColor: BRAND_GOLD,
-    borderRadius: 16,
-    paddingVertical: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  ctaPrimaryText: {
-    color: BRAND_NAVY,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   ctaSecondary: {
     backgroundColor: CARD_BG,
     borderRadius: 16,

@@ -187,7 +187,7 @@ export default function ProfileScreen() {
     if (authLoading) return;
 
     if (!user) {
-      router.replace('/auth/login');
+      router.replace('/');
       return;
     }
 
@@ -199,23 +199,13 @@ export default function ProfileScreen() {
     loadProfileData(true);
   };
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await logout();
-            router.replace('/auth/login');
-          } catch (error) {
-            console.error('Logout error:', error);
-            Alert.alert('Error', 'Unable to logout right now. Please try again.');
-          }
-        },
-      },
-    ]);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   if (authLoading || (screenLoading && !profile && !stats)) {
@@ -380,12 +370,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   title: {
-    fontSize: 32,
+    fontSize: 18,
     fontWeight: '700',
     color: '#fff',
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: 14,
     color: 'rgba(255,255,255,0.75)',
     lineHeight: 22,
   },
@@ -397,14 +387,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(244,67,54,0.22)',
     borderWidth: 1,
     borderColor: 'rgba(255,107,107,0.7)',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     borderRadius: 24,
   },
   logoutButtonText: {
     color: '#fff',
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: 12,
   },
   successBanner: {
     flexDirection: 'row',
@@ -452,7 +442,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: BRAND_GOLD,
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: '700',
   },
   infoGrid: {
@@ -471,12 +461,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     color: BRAND_GOLD,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
   },
   infoValue: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
     lineHeight: 22,
   },
@@ -496,7 +486,7 @@ const styles = StyleSheet.create({
   },
   progressTitle: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: '700',
   },
   badgeWrap: {
@@ -540,12 +530,12 @@ const styles = StyleSheet.create({
   statLabel: {
     color: '#fff',
     opacity: 0.8,
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 8,
   },
   statValue: {
     color: BRAND_GOLD,
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: '700',
   },
   refreshButton: {

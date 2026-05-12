@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router';
 
 const BRAND_NAVY = '#081833';
@@ -61,7 +62,7 @@ export default function QuizScreen() {
           <Ionicons name="close" size={24} color={BRAND_GOLD} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Career Quiz</Text>
-        <View style={{ width: 40 }} />
+        <View style={{ width: 60 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>

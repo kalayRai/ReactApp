@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
+import { useCareerStore } from '../../src/store/careerStore';
 
 const BRAND_NAVY = '#081833';
 const BRAND_GOLD = '#d4a45f';
@@ -61,6 +62,15 @@ const FEATURES: FeatureCard[] = [
     route: '/QuizScreen',
   },
   {
+    id: 'courses',
+    title: 'Courses',
+    description: 'Browse career-focused courses and learning paths.',
+    icon: 'book-outline',
+    iconBg: 'rgba(59,130,246,0.2)',
+    iconColor: '#3B82F6',
+    route: '/CoursesScreen',
+  },
+  {
     id: 'interview',
     title: 'Interview',
     description: 'Practice mock interviews with AI feedback.',
@@ -80,10 +90,29 @@ const FEATURES: FeatureCard[] = [
     route: '/AnalyticsScreen',
     wide: true,
   },
+  {
+    id: 'onboarding',
+    title: 'Career Onboarding',
+    description: 'Get started with a personalized career roadmap.',
+    icon: 'rocket-outline',
+    iconBg: 'rgba(220,38,38,0.2)',
+    iconColor: '#EF4444',
+    route: '/onboarding-wrapper',
+  },
+  {
+    id: 'simulator',
+    title: 'Career Simulator',
+    description: 'Model how new skills shift your career matches.',
+    icon: 'game-controller-outline',
+    iconBg: 'rgba(16,185,129,0.2)',
+    iconColor: '#10B981',
+    route: '/SimulatorScreen',
+  }
 ];
 
 export default function HomeScreen() {
   const { user, logout } = useAuth();
+  const { pipelineComplete, careerMatches } = useCareerStore();
 
   // Derive initials from user name
   const initials = user?.name
@@ -212,7 +241,11 @@ export default function HomeScreen() {
             </View>
             <View style={styles.wideText}>
               <Text style={styles.wideTitle}>{WideCard.title}</Text>
-              <Text style={styles.wideDesc}>{WideCard.description}</Text>
+              <Text style={styles.wideDesc}>
+                {pipelineComplete && careerMatches.length > 0
+                  ? `${careerMatches.length} career matches ready · Tap to view`
+                  : WideCard.description}
+              </Text>
             </View>
             <Ionicons
               name="chevron-forward"

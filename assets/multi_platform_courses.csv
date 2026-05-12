@@ -1,0 +1,133 @@
+Roles,Skills,Title of Course,URL,Platform
+Data Scientist,"Python, R, SQL, Statistical Analysis, Big Data Technologies (Hadoop/Spark), Communication","IBM Data Science Professional Certificate","https://www.coursera.org/professional-certificates/ibm-data-science","Coursera"
+Data Scientist,"Python, R, SQL, Machine Learning, Big Data Technologies (Hadoop/Spark), Communication","Python for Data Science, AI & Development","https://www.coursera.org/learn/python-for-applied-data-science-ai","Coursera"
+Data Scientist,"Python, Machine Learning, Data Visualization (Tableau/Power BI), Big Data Technologies (Hadoop/Spark), Communication","Google Foundations of Data Science","https://www.coursera.org/learn/foundations-of-data-science","Coursera"
+Data Scientist,"Python, R, SQL, Machine Learning, Statistical Analysis, Data Visualization (Tableau/Power BI)","Data Science Specialization","https://www.coursera.org/specializations/jhu-data-science","Coursera"
+Data Scientist,"Python, R, SQL, Machine Learning, Statistical Analysis, Data Visualization (Tableau/Power BI), Big Data Technologies (Hadoop/Spark), Communication","Databases and SQL for Data Science with Python","https://www.coursera.org/learn/sql-data-science","Coursera"
+
+Data Analyst,"SQL, Excel, Data Visualization (Tableau/Power BI), Statistical Analysis, Data Cleaning, Data Storytelling","Google Data Analytics Professional Certificate","https://www.coursera.org/professional-certificates/google-data-analytics","Coursera"
+Data Analyst,"SQL, Excel, Data Visualization (Tableau/Power BI), Statistical Analysis","Introduction to Data Analytics","https://www.coursera.org/learn/introduction-to-data-analytics","Coursera"
+Data Analyst,"SQL, Excel, Data Visualization (Tableau/Power BI), Statistical Analysis, NumPy, Pandas, Python, R","Data Analysis with Python","https://www.coursera.org/learn/data-analysis-with-python","Coursera"
+Data Analyst,"SQL, Excel, Data Visualization (Tableau/Power BI), Statistical Analysis, Python, R","The Complete SQL Bootcamp","https://www.udemy.com/course/the-complete-sql-bootcamp/","Udemy"
+Data Analyst,"SQL, NumPy, Pandas, Excel, Data Visualization (Tableau/Power BI), Statistical Analysis, Python, R","The Data Analyst Course","https://www.udemy.com/course/the-data-analyst-course-complete-data-analyst-bootcamp/","Udemy"
+
+Machine Learning Engineer,"TensorFlow, PyTorch, Keras, Machine Learning, Deep Learning, Data Structures, Algorithms, Model Deployment, Mathematics, Statistics","Deep Learning Specialization","https://www.coursera.org/specializations/deep-learning","Coursera"
+Machine Learning Engineer,"Python, C++, TensorFlow, PyTorch, Keras, Mathematics, Statistics","Mathematics for Machine Learning and Data Science Specialization","https://www.coursera.org/specializations/mathematics-for-machine-learning-and-data-science","Coursera"
+Machine Learning Engineer,"Python, TensorFlow, PyTorch, Keras, Mathematics, Statistics, Machine Learning, Deep Learning, Data Structures, Algorithms, Model Deployment","Machine Learning Specialization","https://www.coursera.org/specializations/machine-learning-introduction","Coursera"
+Machine Learning Engineer,"Python, C++, TensorFlow, Scikit-learn, PyTorch, Hugging Face, Keras, Mathematics, Statistics, Machine Learning, Deep Learning, Data Structures, Algorithms, Model Deployment","Machine Learning with Scikit-learn, PyTorch & Hugging Face","https://www.coursera.org/professional-certificates/machine-learning-scikit-learn-pytorch-hugging-face","Coursera"
+
+Data Engineer,"SQL, Python, ETL, Data Warehousing, Big Data, Cloud Computing","Google Cloud Data Engineer Professional Certificate","https://www.coursera.org/professional-certificates/gcp-data-engineering","Coursera"
+Data Engineer,"Hadoop, HDFS, MapReduce, Hive, Pig, Spark","The Ultimate Hands-On Hadoop","https://www.udemy.com/course/the-ultimate-hands-on-hadoop-tame-your-big-data/","Udemy"
+Data Engineer,"Python, SQL, ETL, Data Pipelines, Relational Databases, NoSQL Databases","IBM Data Engineering Professional Certificate","https://www.coursera.org/professional-certificates/ibm-data-engineer","Coursera"
+Data Engineer,"Python, SQL, Data Pipelines, Database Design, Data Wrangling","Data Engineer with Python Track","https://www.datacamp.com/tracks/data-engineer-in-python","DataCamp"
+
+Business Intelligence (BI) Analyst,"Data Modeling, Stakeholder Engagement, ETL, Data Warehousing, Tableau, SQL","Google Business Intelligence Professional Certificate","https://www.coursera.org/professional-certificates/google-business-intelligence","Coursera"
+Business Intelligence (BI) Analyst,"SQL, Tableau, Power BI, Statistics, Data Analysis","The Business Intelligence Analyst Course 2024","https://www.udemy.com/course/the-business-intelligence-analyst-course-2018/","Udemy"
+Business Intelligence (BI) Analyst,"Data Visualization, Data Warehousing, Data Modeling, Tableau, SQL","AI For Business Specialization","https://www.coursera.org/specializations/ai-for-business-wharton","Coursera"
+
+Front-End Web Developer,"HTML, CSS, JavaScript, React.js, UI/UX, Version Control (Git)","Meta Front-End Developer","https://www.coursera.org/professional-certificates/meta-front-end-developer","Coursera"
+Front-End Web Developer,"HTML, CSS, Responsive Design, CSS Flexbox, CSS Grid","Responsive Web Design Certification","https://www.freecodecamp.org/learn/2022/responsive-web-design/","freeCodeCamp"
+
+UX/UI Designer,"UX Research, Design Thinking, Wireframing, Prototyping (Figma), Usability Testing, Portfolio Creation","Google UX Design Professional Certificate","https://www.coursera.org/professional-certificates/google-ux-design","Coursera"
+UX/UI Designer,"UX Design Principles, User-Centered Design, Usability, Wireframing, Prototyping","Complete UI/UX Design Course 2025","https://www.udemy.com/course/complete-uiux-design-course-figma-ai-real-project/","Udemy"
+
+Roles,Skills,Title of Course,URL,Platform
+Product Manager,"Product Strategy, Roadmapping, Agile, Stakeholder Management, Data Analysis",Product Management Professional Certificate,https://www.coursera.org/professional-certificates/google-product-management,Coursera
+Product Manager,"Agile, Scrum, Product Lifecycle, UX Basics",Product Management Foundations,https://www.udemy.com/course/product-management-foundations/,Udemy
+Product Manager,"User Research, MVP, Product Strategy",Product Strategy for Growth,https://www.coursera.org/learn/product-strategy,Coursera
+Product Manager,"Agile, Backlog Management, Product Delivery",Become a Product Manager,https://www.udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job/,Udemy
+Product Manager,"Product Analytics, Metrics, A/B Testing",Product Analytics,https://www.coursera.org/learn/product-analytics,Coursera
+
+Business Analyst,"Business Analysis, Requirements Gathering, Stakeholder Communication",Business Analysis Fundamentals,https://www.udemy.com/course/business-analysis-fundamentals/,Udemy
+Business Analyst,"SQL, Excel, Data Analysis",Business Analytics Specialization,https://www.coursera.org/specializations/business-analytics,Coursera
+Business Analyst,"Process Modeling, BPMN, Documentation",Business Process Modeling,https://www.udemy.com/course/business-process-modeling/,Udemy
+Business Analyst,"Decision Making, Business Strategy",Business Analysis for Decision Making,https://www.coursera.org/learn/business-analysis-decision-making,Coursera
+Business Analyst,"Data Visualization, Power BI, Tableau",Business Intelligence Concepts,https://www.udemy.com/course/business-intelligence-concepts-tools/,Udemy
+
+HR Manager,"Recruitment, Talent Management, HR Analytics",Human Resource Management,https://www.coursera.org/learn/human-resource-management,Coursera
+HR Manager,"Employee Engagement, Performance Management",HR Analytics,https://www.udemy.com/course/hr-analytics/,Udemy
+HR Manager,"Labor Laws, Compliance",HR Management Professional Certificate,https://www.coursera.org/professional-certificates/human-resource-management,Coursera
+HR Manager,"Organizational Behavior, Leadership",Organizational Behavior,https://www.udemy.com/course/organizational-behavior/,Udemy
+HR Manager,"Conflict Resolution, Communication",Workplace Conflict Management,https://www.coursera.org/learn/workplace-conflict-management,Coursera
+
+Financial Analyst,"Financial Modeling, Excel, Valuation",Financial Analyst Certification,https://www.coursera.org/professional-certificates/financial-analysis,Coursera
+Financial Analyst,"Investment Analysis, Portfolio Management",Investment Banking Basics,https://www.udemy.com/course/investment-banking-basics/,Udemy
+Financial Analyst,"Accounting, Financial Statements",Financial Accounting,https://www.coursera.org/learn/financial-accounting,Coursera
+Financial Analyst,"Corporate Finance, Risk Analysis",Corporate Finance Essentials,https://www.udemy.com/course/corporate-finance-essentials/,Udemy
+Financial Analyst,"Financial Forecasting, Budgeting",Financial Planning & Analysis,https://www.coursera.org/learn/financial-planning-analysis,Coursera
+
+Operations Manager,"Process Optimization, Lean, Six Sigma",Operations Management,https://www.coursera.org/learn/operations-management,Coursera
+Operations Manager,"Supply Chain, Logistics",Operations & Supply Chain Management,https://www.udemy.com/course/operations-supply-chain-management/,Udemy
+Operations Manager,"Quality Management, Lean Operations",Lean Operations,https://www.coursera.org/learn/lean-operations,Coursera
+Operations Manager,"Inventory Management, Forecasting",Inventory Management Essentials,https://www.udemy.com/course/inventory-management/,Udemy
+Operations Manager,"Leadership, Process Improvement",Operational Excellence,https://www.coursera.org/learn/operational-excellence,Coursera
+
+Cloud Engineer,"AWS, Azure, GCP, Networking, Virtualization, Security, DevOps Basics","AWS Cloud Practitioner Essentials","https://www.coursera.org/learn/aws-cloud-practitioner-essentials","Coursera"
+Cloud Engineer,"AWS, EC2, S3, IAM, CloudFormation, Monitoring","AWS Certified Solutions Architect Associate","https://www.udemy.com/course/aws-certified-solutions-architect-associate/","Udemy"
+Cloud Engineer,"Azure, Virtual Machines, Networking, Storage, Security","Microsoft Azure Fundamentals AZ-900","https://www.edx.org/learn/microsoft-azure-fundamentals","edX"
+Cloud Engineer,"GCP, Compute Engine, Kubernetes, IAM, Cloud Storage","Google Cloud Fundamentals Core Infrastructure","https://www.coursera.org/learn/gcp-fundamentals","Coursera"
+
+Cybersecurity Analyst,"Network Security, Threat Analysis, Cryptography, SIEM, Incident Response","Google Cybersecurity Professional Certificate","https://www.coursera.org/professional-certificates/google-cybersecurity","Coursera"
+Cybersecurity Analyst,"Ethical Hacking, Penetration Testing, Kali Linux, Networking","The Complete Cyber Security Course","https://www.udemy.com/course/the-complete-internet-security-privacy-course-volume-1/","Udemy"
+Cybersecurity Analyst,"Security Fundamentals, Risk Management, Compliance","Introduction to Cyber Security","https://www.edx.org/learn/cybersecurity","edX"
+Cybersecurity Analyst,"Network Security, Firewalls, IDS/IPS, Encryption","IBM Cybersecurity Analyst Professional Certificate","https://www.coursera.org/professional-certificates/ibm-cybersecurity-analyst","Coursera"
+
+DevOps Engineer,"CI/CD, Docker, Kubernetes, Jenkins, Git, Linux, Cloud","DevOps on AWS Specialization","https://www.coursera.org/specializations/aws-devops","Coursera"
+DevOps Engineer,"Docker, Kubernetes, CI/CD Pipelines, Terraform, Jenkins","Docker and Kubernetes The Complete Guide","https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/","Udemy"
+DevOps Engineer,"CI/CD, GitHub Actions, Automation, Cloud Deployment","Introduction to DevOps","https://www.edx.org/learn/devops","edX"
+DevOps Engineer,"Linux, Bash, Automation, Monitoring, Infrastructure as Code","DevOps Engineering Professional Certificate","https://www.coursera.org/professional-certificates/devops-engineering","Coursera"
+
+AI Engineer,"Python, TensorFlow, PyTorch, NLP, Computer Vision, Deep Learning","AI Engineering Professional Certificate","https://www.coursera.org/professional-certificates/ai-engineer","Coursera"
+AI Engineer,"Deep Learning, Neural Networks, CNN, RNN, NLP","Deep Learning A-Z","https://www.udemy.com/course/deeplearning/","Udemy"
+AI Engineer,"Machine Learning, AI Concepts, Neural Networks","Artificial Intelligence MicroMasters","https://www.edx.org/micromasters/columbiax-artificial-intelligence","edX"
+AI Engineer,"Python, NLP, Transformers, Hugging Face","Natural Language Processing Specialization","https://www.coursera.org/specializations/natural-language-processing","Coursera"
+
+Full Stack Developer,"HTML, CSS, JavaScript, React, Node.js, MongoDB","Full Stack Web Development with React","https://www.coursera.org/specializations/full-stack-react","Coursera"
+Full Stack Developer,"JavaScript, Node.js, Express, MongoDB, REST APIs","The Complete Node.js Developer Course","https://www.udemy.com/course/the-complete-nodejs-developer-course-2/","Udemy"
+Full Stack Developer,"HTML, CSS, JavaScript, Databases, Backend Development","Full Stack Development Program","https://www.edx.org/professional-certificate/full-stack-web-development","edX"
+Full Stack Developer,"React, Next.js, APIs, Authentication","Meta Full-Stack Developer","https://www.coursera.org/professional-certificates/meta-full-stack-developer","Coursera"
+
+Backend Developer,"Node.js, Express, Databases, APIs, Authentication","Backend Development and APIs","https://www.freecodecamp.org/learn/back-end-development-and-apis/","freeCodeCamp"
+Backend Developer,"Java, Spring Boot, REST APIs, Microservices","Spring Boot and Microservices","https://www.udemy.com/course/spring-boot-microservices/","Udemy"
+Backend Developer,"Python, Django, REST APIs, Databases","Django for Everybody","https://www.coursera.org/specializations/django","Coursera"
+Backend Developer,"Databases, APIs, Server-side Logic","Server-side Development with NodeJS","https://www.coursera.org/learn/server-side-nodejs","Coursera"
+
+Frontend Developer,"HTML, CSS, JavaScript, React, UI Design","Frontend Developer Career Path","https://www.codecademy.com/learn/paths/front-end-engineer-career-path","Codecademy"
+Frontend Developer,"JavaScript, React, Redux, UI Components","React The Complete Guide","https://www.udemy.com/course/react-the-complete-guide-incl-redux/","Udemy"
+Frontend Developer,"HTML, CSS, Accessibility, Responsive Design","Frontend Web Developer Nanodegree","https://www.udacity.com/course/front-end-web-developer-nanodegree--nd0011","Udacity"
+Frontend Developer,"CSS, Flexbox, Grid, Animations","Advanced CSS and Sass","https://www.udemy.com/course/advanced-css-and-sass/","Udemy"
+
+Blockchain Developer,"Solidity, Ethereum, Smart Contracts, Web3","Blockchain Specialization","https://www.coursera.org/specializations/blockchain","Coursera"
+Blockchain Developer,"Ethereum, Solidity, Smart Contracts, DApps","Ethereum and Solidity The Complete Guide","https://www.udemy.com/course/ethereum-and-solidity-the-complete-developers-guide/","Udemy"
+Blockchain Developer,"Blockchain Basics, Cryptography, Decentralization","Blockchain Fundamentals","https://www.edx.org/learn/blockchain","edX"
+Blockchain Developer,"Web3, Smart Contracts, DApps","Build Blockchain Applications","https://www.coursera.org/projects/build-blockchain-applications","Coursera"
+
+Digital Marketing Specialist,"SEO, SEM, Content Marketing, Social Media Marketing, Google Analytics","Google Digital Marketing & E-commerce Professional Certificate","https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce","Coursera"
+Digital Marketing Specialist,"SEO, PPC, Email Marketing, Social Media Strategy","The Complete Digital Marketing Course","https://www.udemy.com/course/learn-digital-marketing-course/","Udemy"
+
+Content Writer,"Content Writing, SEO Writing, Blogging, Copywriting, Research","Content Marketing Certification","https://www.hubspot.com/resources/courses/content-marketing","HubSpot"
+Content Writer,"Creative Writing, Copywriting, Editing, Storytelling","Secret Sauce of Great Writing","https://www.udemy.com/course/secret-sauce-of-great-writing/","Udemy"
+
+Graphic Designer,"Adobe Photoshop, Illustrator, Typography, Branding","Graphic Design Specialization","https://www.coursera.org/specializations/graphic-design","Coursera"
+Graphic Designer,"Photoshop, Illustrator, InDesign, Visual Design","Graphic Design Masterclass","https://www.udemy.com/course/graphic-design-masterclass-everything-you-need-to-know/","Udemy"
+
+Sales Manager,"Sales Strategy, Negotiation, CRM, Lead Generation","Sales Training: Practical Sales Techniques","https://www.udemy.com/course/sales-skills-training-practical-sales-techniques/","Udemy"
+Sales Manager,"Customer Relationship Management, Communication, Sales Planning","Successful Negotiation: Essential Strategies and Skills","https://www.coursera.org/learn/negotiation-skills","Coursera"
+
+Teacher,"Pedagogy, Classroom Management, Curriculum Design, Assessment","Foundations of Teaching for Learning","https://www.coursera.org/specializations/teaching-learning","Coursera"
+Teacher,"Instructional Design, Teaching Methods, Student Engagement","Instructional Design Foundations","https://www.edx.org/learn/instructional-design","edX"
+
+Entrepreneur,"Business Strategy, Marketing, Finance, Leadership","Entrepreneurship Specialization","https://www.coursera.org/specializations/wharton-entrepreneurship","Coursera"
+Entrepreneur,"Startup, Business Planning, Fundraising, Growth","Entrepreneurship: How to Start a Business","https://www.udemy.com/course/how-to-start-a-business/","Udemy"
+
+Event Manager,"Event Planning, Budgeting, Vendor Management, Marketing","Event Management Foundations","https://www.udemy.com/course/event-management-foundations/","Udemy"
+Event Manager,"Event Planning, Coordination, Logistics","Introduction to Event Management","https://www.coursera.org/learn/event-management","Coursera"
+
+Journalist,"Reporting, Writing, Editing, Media Ethics","Journalism Skills for Engaged Citizens","https://www.coursera.org/specializations/journalism","Coursera"
+Journalist,"News Writing, Investigative Journalism, Interviewing","Journalism Masterclass","https://www.udemy.com/course/journalism-masterclass/","Udemy"
+
+Hospitality Manager,"Customer Service, Operations, Leadership, Communication","Hospitality Management Studies","https://www.coursera.org/learn/hospitality-management","Coursera"
+Hospitality Manager,"Hotel Management, Guest Relations, Operations","Hospitality Management Fundamentals","https://www.udemy.com/course/hospitality-management-fundamentals/","Udemy"
+
+Fitness Trainer,"Fitness Training, Nutrition, Anatomy, Coaching","Science of Exercise","https://www.coursera.org/learn/science-exercise","Coursera"
+Fitness Trainer,"Personal Training, Workout Planning, Nutrition","Complete Fitness Trainer Certification","https://www.udemy.com/course/fitness-trainer-certification/","Udemy"

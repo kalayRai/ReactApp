@@ -116,3 +116,40 @@ class AnalyticsTrendsResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+# Onboarding schemas
+class OnboardingProfile(BaseModel):
+    name: Optional[str] = None
+    age: Optional[str] = None
+    location: Optional[str] = None
+    education: Optional[str] = None
+    current_role: Optional[str] = None
+    years_exp: Optional[str] = None
+    skills: Optional[list[str]] = None
+    values: Optional[list[str]] = None
+    goals: Optional[str] = None
+    salary_floor: Optional[str] = None
+    work_type: Optional[str] = None
+
+class OnboardingSaveRequest(BaseModel):
+    profile: OnboardingProfile
+    enriched_profile: Optional[dict] = None
+    career_matches: Optional[list[dict]] = None
+    roadmap: Optional[dict] = None
+    jobs: Optional[list[dict]] = None
+    pipeline_complete: bool = False
+
+class OnboardingResponse(BaseModel):
+    id: int
+    user_id: int
+    profile: Optional[OnboardingProfile] = None
+    enriched_profile: Optional[dict] = None
+    career_matches: Optional[list[dict]] = None
+    roadmap: Optional[dict] = None
+    jobs: Optional[list[dict]] = None
+    pipeline_complete: bool
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True

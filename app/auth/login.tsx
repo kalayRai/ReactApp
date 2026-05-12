@@ -12,6 +12,7 @@ import {
   Platform,
   StatusBar,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -54,7 +55,8 @@ export default function LoginScreen() {
 
       <KeyboardAvoidingView
         style={styles.kav}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <View style={styles.inner}>
           {/* Brand */}
@@ -86,6 +88,8 @@ export default function LoginScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              returnKeyType="next"
+              blurOnSubmit={false}
             />
           </View>
 
@@ -104,6 +108,9 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
+              returnKeyType="done"
+              onSubmitEditing={handleLogin}
+              blurOnSubmit={false}
             />
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}

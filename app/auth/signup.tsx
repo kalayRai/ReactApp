@@ -1,5 +1,5 @@
 // app/auth/signup.tsx
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,64 @@ import { useAuth } from '../../context/AuthContext';
 
 const BRAND_NAVY = '#081833';
 const BRAND_GOLD = '#d4a45f';
+
+interface FieldProps {
+  icon: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  showToggle?: boolean;
+  toggleState?: boolean;
+  onToggle?: () => void;
+  returnKeyType?: 'next' | 'done' | 'go';
+  onSubmitEditing?: () => void;
+}
+
+function Field({
+  icon,
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry,
+  keyboardType,
+  autoCapitalize,
+  showToggle,
+  toggleState,
+  onToggle,
+  returnKeyType,
+  onSubmitEditing,
+}: FieldProps) {
+  return (
+    <View style={styles.inputWrap}>
+      <Ionicons name={icon} size={18} color="#666" style={styles.inputIcon} />
+      <TextInput
+        style={[styles.input, { flex: 1 }]}
+        placeholder={placeholder}
+        placeholderTextColor="#555"
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry && !toggleState}
+        keyboardType={keyboardType || 'default'}
+        autoCapitalize={autoCapitalize || 'sentences'}
+        returnKeyType={returnKeyType}
+        onSubmitEditing={onSubmitEditing}
+        blurOnSubmit={false}
+      />
+      {showToggle && (
+        <TouchableOpacity onPress={onToggle} style={styles.eyeBtn}>
+          <Ionicons
+            name={toggleState ? 'eye-off-outline' : 'eye-outline'}
+            size={18}
+            color="#666"
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+}
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -54,42 +112,6 @@ export default function SignupScreen() {
     }
   };
 
-  const Field = ({
-    icon,
-    placeholder,
-    value,
-    onChangeText,
-    secureTextEntry,
-    keyboardType,
-    autoCapitalize,
-    showToggle,
-    toggleState,
-    onToggle,
-  }: any) => (
-    <View style={styles.inputWrap}>
-      <Ionicons name={icon} size={18} color="#666" style={styles.inputIcon} />
-      <TextInput
-        style={[styles.input, { flex: 1 }]}
-        placeholder={placeholder}
-        placeholderTextColor="#555"
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry && !toggleState}
-        keyboardType={keyboardType || 'default'}
-        autoCapitalize={autoCapitalize || 'sentences'}
-      />
-      {showToggle && (
-        <TouchableOpacity onPress={onToggle} style={styles.eyeBtn}>
-          <Ionicons
-            name={toggleState ? 'eye-off-outline' : 'eye-outline'}
-            size={18}
-            color="#666"
-          />
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" backgroundColor={BRAND_NAVY} />
@@ -100,12 +122,14 @@ export default function SignupScreen() {
 
       <KeyboardAvoidingView
         style={styles.kav}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
           {/* Brand */}
           <View style={styles.brandRow}>
@@ -125,6 +149,7 @@ export default function SignupScreen() {
             placeholder="Full Name"
             value={name}
             onChangeText={setName}
+            returnKeyType="next"
           />
           <Field
             icon="mail-outline"
@@ -133,6 +158,7 @@ export default function SignupScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            returnKeyType="next"
           />
           <Field
             icon="lock-closed-outline"
@@ -143,6 +169,7 @@ export default function SignupScreen() {
             showToggle
             toggleState={showPassword}
             onToggle={() => setShowPassword(!showPassword)}
+            returnKeyType="next"
           />
           <Field
             icon="lock-closed-outline"
@@ -153,6 +180,8 @@ export default function SignupScreen() {
             showToggle
             toggleState={showPassword}
             onToggle={() => setShowPassword(!showPassword)}
+            returnKeyType="done"
+            onSubmitEditing={handleSignup}
           />
 
           {/* Password strength hint */}

@@ -13,7 +13,8 @@ from app.schemas import (
     ChatRequest, ChatResponse, RoadmapRequest, RoadmapResponse,
     CourseSearchRequest, CourseSearchResponse, UserStatsResponse,
     ResumeUploadRequest, ResumeResponse, InterviewHistoryResponse,
-    AnalyticsTrendsResponse, ResumeRefineRequest, ResumeRefineResponse
+    AnalyticsTrendsResponse, ResumeRefineRequest, ResumeRefineResponse,
+    OnboardingSaveRequest, OnboardingResponse, OnboardingProfile
 )
 
 router = APIRouter(prefix="/api", tags=["features"])
@@ -484,3 +485,116 @@ def track_analytics(
         db.commit()
     
     return {"status": "tracked", "category": category}
+
+
+# ============ ONBOARDING ENDPOINTS ============
+@router.get("/onboarding", response_model=OnboardingResponse)
+def get_onboarding(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get user's onboarding results"""
+    from app.models import OnboardingResult
+    
+    result = db.query(OnboardingResult).filter(
+        OnboardingResult.user_id == current_user.id
+    ).first()
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="No onboarding results found")
+    
+    # Parse profile fields
+    import json
+    
+    profile = None
+    if result.profile_name or result.profile_skills:
+        profile_dict = {
+            "name": result.profile_name,
+            "age": result.profile_age,
+            "location": result.profile_location,
+            "education": result.profile_education,
+            "current_role": result.profile_current_role,
+            "years_exp": result.profile_years_exp,
+            "skills": json.loads(result.profile_skills) if result.profile_skills else None,
+            "values": json.loads(result.profile_values) if result.profile_values else None,
+            "goals": result.profile_goals,
+            "salary_floor": result.profile_salary_floor,
+            "work_type": result.profile_work_type,
+        }
+        profile = OnboardingProfile(**profile_dict)
+    
+    return OnboardingResponse(
+        id=result.id,
+        user_id=result.user_id,
+        profile=profile,
+        enriched_profile=json.loads(result.enriched_profile) if result.enriched_profile else None,
+        career_matches=json.loads(result.career_matches) if result.career_matches else None,
+        roadmap=json.loads(result.roadmap) if result.roadmap else None,
+        jobs=json.loads(result.jobs) if result.jobs else None,
+        pipeline_complete=result.pipeline_complete,
+        created_at=result.created_at,
+        updated_at=result.updated_at
+    )
+
+
+@router.post("/onboarding")
+def save_onboarding(
+    request: OnboardingSaveRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Save or update user's onboarding results"""
+    from app.models import OnboardingResult
+    import json
+    
+    # Check if onboarding result exists
+    existing = db.query(OnboardingResult).filter(
+        OnboardingResult.user_id == current_user.id
+    ).first()
+    
+    if existing:
+        # Update existing record
+        existing.profile_name = request.profile.name
+        existing.profile_age = request.profile.age
+        existing.profile_location = request.profile.location
+        existing.profile_education = request.profile.education
+        existing.profile_current_role = request.profile.current_role
+        existing.profile_years_exp = request.profile.years_exp
+        existing.profile_skills = json.dumps(request.profile.skills) if request.profile.skills else None
+        existing.profile_values = json.dumps(request.profile.values) if request.profile.values else None
+        existing.profile_goals = request.profile.goals
+        existing.profile_salary_floor = request.profile.salary_floor
+        existing.profile_work_type = request.profile.work_type
+        existing.enriched_profile = json.dumps(request.enriched_profile) if request.enriched_profile else None
+        existing.career_matches = json.dumps(request.career_matches) if request.career_matches else None
+        existing.roadmap = json.dumps(request.roadmap) if request.roadmap else None
+        existing.jobs = json.dumps(request.jobs) if request.jobs else None
+        existing.pipeline_complete = request.pipeline_complete
+        db.commit()
+        db.refresh(existing)
+        return {"id": existing.id, "status": "updated"}
+    else:
+        # Create new record
+        new_result = OnboardingResult(
+            user_id=current_user.id,
+            profile_name=request.profile.name,
+            profile_age=request.profile.age,
+            profile_location=request.profile.location,
+            profile_education=request.profile.education,
+            profile_current_role=request.profile.current_role,
+            profile_years_exp=request.profile.years_exp,
+            profile_skills=json.dumps(request.profile.skills) if request.profile.skills else None,
+            profile_values=json.dumps(request.profile.values) if request.profile.values else None,
+            profile_goals=request.profile.goals,
+            profile_salary_floor=request.profile.salary_floor,
+            profile_work_type=request.profile.work_type,
+            enriched_profile=json.dumps(request.enriched_profile) if request.enriched_profile else None,
+            career_matches=json.dumps(request.career_matches) if request.career_matches else None,
+            roadmap=json.dumps(request.roadmap) if request.roadmap else None,
+            jobs=json.dumps(request.jobs) if request.jobs else None,
+            pipeline_complete=request.pipeline_complete
+        )
+        db.add(new_result)
+        db.commit()
+        db.refresh(new_result)
+        return {"id": new_result.id, "status": "created"}

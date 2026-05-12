@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+services/api.ts
+services/config.ts
+
 # Expo
 .expo/
 dist/
